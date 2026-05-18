@@ -1,7 +1,15 @@
 package main
 
-import "fmt"
+import (
+	"github.com/glebateee/core/logging"
+)
+
+func writeMessage(logger logging.Logger, msg string) {
+	logger.Info(msg)
+
+}
 
 func main() {
-	fmt.Println("Hello")
+	logger := logging.NewDefaultLogger(logging.Information)
+	writeMessage(logger, "Hello")
 }
