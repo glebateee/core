@@ -5,21 +5,20 @@ import (
 
 	"github.com/glebateee/core/logging"
 	"github.com/glebateee/core/pipeline"
-	"github.com/glebateee/core/services"
 )
 
 type ErrorComponent struct{}
 
 func (c *ErrorComponent) Init() {}
 
-func (c *ErrorComponent) ProcessRequest(
+func (c *ErrorComponent) ImplementsProcessRequestWithServices() {}
+
+func (c *ErrorComponent) ProcessRequestWithServices(
 	ctx *pipeline.ComponentContext,
 	next func(*pipeline.ComponentContext),
+	logger logging.Logger,
 ) {
-	var logger logging.Logger
-	if err := services.GetServiceForContext(ctx.Context(), &logger); err != nil {
-		panic(err)
-	}
+
 	defer recoverFunc(ctx, logger)
 	next(ctx)
 	if err := ctx.GetError(); err != nil {

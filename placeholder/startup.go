@@ -4,6 +4,7 @@ import (
 	"sync"
 
 	"github.com/glebateee/core/http"
+	"github.com/glebateee/core/http/handling"
 
 	"github.com/glebateee/core/pipeline"
 	"github.com/glebateee/core/pipeline/basic"
@@ -15,8 +16,11 @@ func createPipeline() pipeline.RequestPipeline {
 		&basic.ServicesComponent{},
 		&basic.LoggingComponent{},
 		&basic.ErrorComponent{},
-		&basic.StaticFileComponent{},
-		&SimpleMessageComponent{},
+		//&basic.StaticFileComponent{},
+		//&SimpleMessageComponent{},
+		handling.NewRouter(
+			handling.HandlerEntry{Prefix: "", Handler: NameHandler{}},
+		),
 	)
 }
 
