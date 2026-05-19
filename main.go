@@ -1,7 +1,11 @@
 package main
 
-import "fmt"
+import (
+	"github.com/glebateee/core/placeholder"
+	"github.com/glebateee/core/services"
+)
 
 func main() {
-	fmt.Println("Hello")
+	services.RegisterDefaultServices()
+	placeholder.Start()
 }
