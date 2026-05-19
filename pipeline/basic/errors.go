@@ -17,7 +17,9 @@ func (c *ErrorComponent) ProcessRequest(
 	next func(*pipeline.ComponentContext),
 ) {
 	var logger logging.Logger
-	services.GetServiceForContext(ctx.Context(), &logger)
+	if err := services.GetServiceForContext(ctx.Context(), &logger); err != nil {
+		panic(err)
+	}
 	defer recoverFunc(ctx, logger)
 	next(ctx)
 	if err := ctx.GetError(); err != nil {

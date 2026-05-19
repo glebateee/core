@@ -3,7 +3,6 @@ package config
 import (
 	"encoding/json"
 	"os"
-	"strings"
 )
 
 func Load(fileName string) (config Config, err error) {
@@ -12,7 +11,7 @@ func Load(fileName string) (config Config, err error) {
 		return nil, err
 	}
 	var m map[string]any
-	if err := json.NewDecoder(strings.NewReader(string(data))).Decode(&m); err != nil {
+	if err := json.Unmarshal(data, &m); err != nil {
 		return nil, err
 	}
 	return &defaultConfig{data: m}, nil

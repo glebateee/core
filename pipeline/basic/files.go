@@ -28,7 +28,7 @@ func (c *StaticFileComponent) ProcessRequest(
 	next func(*pipeline.ComponentContext),
 ) {
 	url := ctx.Request.URL.Path
-	if !strings.EqualFold(url, c.prefix) && strings.HasPrefix(url, c.prefix) {
+	if !strings.EqualFold(url, c.prefix) && strings.HasPrefix(strings.ToLower(url), strings.ToLower(c.prefix)) {
 		c.handler.ServeHTTP(ctx.ResponseWriter, ctx.Request)
 	} else {
 		next(ctx)

@@ -15,7 +15,9 @@ func (c *SimpleMessageComponent) Init() {}
 
 func (c *SimpleMessageComponent) ProcessRequest(ctx *pipeline.ComponentContext, next func(*pipeline.ComponentContext)) {
 	var cfg config.Config
-	services.GetService(&cfg)
+	if err := services.GetService(&cfg); err != nil {
+		panic(err)
+	}
 	msg, ok := cfg.GetString("main:message")
 	if ok {
 		io.WriteString(ctx.ResponseWriter, msg)
