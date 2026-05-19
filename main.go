@@ -1,11 +1,20 @@
 package main
 
 import (
+	"fmt"
+
 	"github.com/glebateee/core/config"
 	"github.com/glebateee/core/logging"
+	"github.com/glebateee/core/placeholder"
+	"github.com/glebateee/core/services"
 )
 
-func writeMessage(logger logging.Logger, cfg config.Config) {
+func writeMessage(
+	prefix string,
+	logger logging.Logger,
+	cfg config.Config,
+) {
+	fmt.Println(prefix)
 	section, found := cfg.GetSection("main")
 	if !found {
 		logger.Warn("main section not found")
@@ -20,10 +29,6 @@ func writeMessage(logger logging.Logger, cfg config.Config) {
 }
 
 func main() {
-	cfg, err := config.Load("config.json")
-	if err != nil {
-		panic(err)
-	}
-	logger := logging.NewDefaultLogger(cfg)
-	writeMessage(logger, cfg)
+	services.RegisterDefaultServices()
+	placeholder.Start()
 }
