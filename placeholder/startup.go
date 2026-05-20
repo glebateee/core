@@ -3,6 +3,7 @@ package placeholder
 import (
 	"sync"
 
+	"github.com/glebateee/core/authorization"
 	"github.com/glebateee/core/http"
 	"github.com/glebateee/core/http/handling"
 	"github.com/glebateee/core/sessions"
@@ -20,17 +21,25 @@ func createPipeline() pipeline.RequestPipeline {
 		&basic.StaticFileComponent{},
 		&sessions.SessionComponent{},
 		//&SimpleMessageComponent{},
+		authorization.NewAuthComponent(
+			"protected",
+			authorization.NewRoleCondition("Administrator"),
+			CounterHandler{},
+		),
 		handling.NewRouter(
 			handling.HandlerEntry{Prefix: "", Handler: NameHandler{}},
 			handling.HandlerEntry{Prefix: "", Handler: DayHandler{}},
 			handling.HandlerEntry{Prefix: "", Handler: MonthHandler{}},
-			handling.HandlerEntry{Prefix: "", Handler: CounterHandler{}},
+			handling.HandlerEntry{Prefix: "", Handler: AuthenticationHandler{}},
 		).AddMethodAlias("/", NameHandler.GetNames),
 	)
 }
 
 func Start() {
 	sessions.RegisterSessionService()
+	RegisterPlaceholderUserStore()
+	authorization.RegisterDefaultSignInService()
+	authorization.RegisterDefaultUserService()
 	res, err := services.Call(http.Serve, createPipeline())
 	if err == nil {
 		res[0].(*sync.WaitGroup).Wait()
