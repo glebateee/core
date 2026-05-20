@@ -23,13 +23,19 @@ func setLayoutWrapper(layout *string) func(string) string {
 	}
 }
 
-func (p *LayoutTemplateProcessor) ExecTemplate(w io.Writer, name string, data ...any) error {
+var emptyFunc = func(handlerName, methodName string, args ...any) any { return "" }
+
+func (p *LayoutTemplateProcessor) ExecTemplate(w io.Writer, name string, data any) error {
+	return p.ExecTemplateWithFunc(w, name, data, emptyFunc)
+}
+func (p *LayoutTemplateProcessor) ExecTemplateWithFunc(w io.Writer, name string, data any, f InvokeHandlerFunc) error {
 	var layoutName string
 	var sb strings.Builder
 	localTemplates := getTemplates()
 	localTemplates.Funcs(template.FuncMap{
-		"body":   insertBodyWrapper(&sb),
-		"layout": setLayoutWrapper(&layoutName),
+		"body":    insertBodyWrapper(&sb),
+		"layout":  setLayoutWrapper(&layoutName),
+		"handler": f,
 	})
 
 	if err := localTemplates.ExecuteTemplate(&sb, name, data); err != nil {

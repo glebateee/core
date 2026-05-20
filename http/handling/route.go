@@ -53,8 +53,7 @@ func generateRoutes(entries ...HandlerEntry) []Route {
 
 func getAnonymousFieldMethods(handler reflect.Type) []reflect.Method {
 	methods := make([]reflect.Method, 0, 10)
-	for i := range handler.NumField() {
-		field := handler.Field(i)
+	for field := range handler.Fields() {
 		if field.Anonymous && field.IsExported() {
 			for j := range field.Type.NumMethod() {
 				method := field.Type.Method(j)

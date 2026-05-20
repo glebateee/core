@@ -34,8 +34,13 @@ func CreatePipeline(mw ...any) RequestPipeline {
 }
 
 func (p RequestPipeline) ProcessRequest(r *http.Request, w http.ResponseWriter) error {
-	ctx := ComponentContext{Request: r, ResponseWriter: w}
+	dw := &DeferredWriter{ResponseWriter: w}
+	ctx := ComponentContext{Request: r, ResponseWriter: dw}
 	p(&ctx)
+	if ctx.error == nil {
+		_, err := dw.FlushData()
+		return err
+	}
 	return ctx.error
 }
 

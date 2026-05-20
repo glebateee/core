@@ -21,8 +21,9 @@ func LoadTemplates(cfg config.Config) error {
 		doLoad := func() *template.Template {
 			t := template.New("htmlTemplates")
 			t.Funcs(template.FuncMap{
-				"body":   func() string { return "" },
-				"layout": func() string { return "" },
+				"body":    func() string { return "" },
+				"layout":  func() string { return "" },
+				"handler": func() any { return "" },
 			})
 			t, err = t.ParseGlob(path)
 			return t

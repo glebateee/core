@@ -4,6 +4,7 @@ import (
 	"github.com/glebateee/core/config"
 	"github.com/glebateee/core/logging"
 	"github.com/glebateee/core/templates"
+	"github.com/glebateee/core/validation"
 )
 
 func RegisterDefaultServices() {
@@ -27,6 +28,11 @@ func RegisterDefaultServices() {
 			panic(err)
 		}
 		return &templates.LayoutTemplateProcessor{}
+	}); err != nil {
+		panic(err)
+	}
+	if err := AddSingleton(func() validation.Validator {
+		return validation.NewTagValidator(validation.DefaultValidators())
 	}); err != nil {
 		panic(err)
 	}
