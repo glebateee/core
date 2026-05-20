@@ -46,6 +46,7 @@ func resolveServiceFromValue(ctx context.Context, ptr reflect.Value) error {
 	serviceType := ptr.Elem().Type()
 	if serviceType == contextReferenceType {
 		ptr.Elem().Set(reflect.ValueOf(ctx))
+		return nil
 	} else {
 		binding, ok := services[serviceType]
 		if ok {
